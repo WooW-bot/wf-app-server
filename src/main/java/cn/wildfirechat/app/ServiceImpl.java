@@ -232,6 +232,7 @@ public class ServiceImpl implements Service {
     }
 
     private int getUserStatus(String mobile) {
+        mobile = Utils.normalizeMobile(mobile);
         try {
             IMResult<InputOutputUserInfo> inputOutputUserInfoIMResult = UserAdmin.getUserByMobile(mobile);
             if(inputOutputUserInfoIMResult != null && inputOutputUserInfoIMResult.getErrorCode() == ErrorCode.ERROR_CODE_SUCCESS) {
@@ -252,6 +253,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public RestResult sendLoginCode(String mobile, String slideVerifyToken) {
+        mobile = Utils.normalizeMobile(mobile);
         // 验证滑动验证码
         if (forceSlideVerify) {
             // 强制模式：必须提供token且验证通过
@@ -347,6 +349,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public RestResult sendResetCode(String mobile, String slideVerifyToken) {
+        mobile = Utils.normalizeMobile(mobile);
         // 验证滑动验证码
         if (forceSlideVerify) {
             // 强制模式：必须提供token且验证通过
@@ -441,6 +444,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public RestResult loginWithMobileCode(HttpServletResponse httpResponse, String mobile, String code, String clientId, int platform, String slideVerifyToken) {
+        mobile = Utils.normalizeMobile(mobile);
         // 验证滑动验证码
         if (forceSlideVerify) {
             // 强制模式：必须提供token且验证通过
@@ -488,6 +492,7 @@ public class ServiceImpl implements Service {
     }
 
     public RestResult loginWithLdap(HttpServletResponse httpResponse, String mobile, String password, String clientId, int platform) {
+        mobile = Utils.normalizeMobile(mobile);
         List<LdapUser> users;
         try {
             users = LdapUtil.findUserByPhone(mobile, LDAP_URL, SEARCH_BASE, ADMIN_DN, ADMIN_PWD);
@@ -528,11 +533,13 @@ public class ServiceImpl implements Service {
     }
 
     private String getUserDefaultPassword(String mobile) {
+        mobile = Utils.normalizeMobile(mobile);
         return mobile.length()>6?mobile.substring(mobile.length()-6):mobile;
     }
 
     @Override
     public RestResult loginWithPassword(HttpServletResponse response, String mobile, String password, String clientId, int platform, String slideVerifyToken) {
+        mobile = Utils.normalizeMobile(mobile);
         // 验证滑动验证码
         if (forceSlideVerify) {
             // 强制模式：必须提供token且验证通过
@@ -687,6 +694,7 @@ public class ServiceImpl implements Service {
 
     @Override
     public RestResult resetPassword(String mobile, String resetCode, String newPwd) {
+        mobile = Utils.normalizeMobile(mobile);
         Subject subject = SecurityUtils.getSubject();
         String userId = (String) subject.getSession().getAttribute("userId");
 
@@ -766,6 +774,7 @@ public class ServiceImpl implements Service {
     }
 
     private RestResult onLoginSuccess(HttpServletResponse httpResponse, String mobile, String clientId, int platform, boolean withResetCode) {
+        mobile = Utils.normalizeMobile(mobile);
         Subject subject = SecurityUtils.getSubject();
         try {
             //使用电话号码查询用户信息。
